@@ -27,6 +27,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const count = ref(0);
+import { storeToRefs } from 'pinia';
+import { useCounterStore } from '../stores/counter';
+
+const counter = useCounterStore();
+const { count } = storeToRefs(counter);
+
+function increment() {
+  counter.increment();
+}
 </script>
