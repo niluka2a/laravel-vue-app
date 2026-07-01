@@ -37,7 +37,7 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUsersStore } from '../stores/users';
+import { useUsersStore } from '../../stores/users';
 
 const route = useRoute();
 const store = useUsersStore();

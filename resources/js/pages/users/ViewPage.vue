@@ -128,8 +128,8 @@
 
 <script setup>
 import { computed, reactive, ref, onMounted } from 'vue';
-import { useUsersStore } from '../stores/users';
-import { userSchema, normalizeErrors } from '../validation/userValidation';
+import { useUsersStore } from '../../stores/users';
+import { userSchema, normalizeErrors } from '../../validation/userValidation';
 
 const store = useUsersStore();
 const form = reactive({ name: '', email: '', password: '' });
