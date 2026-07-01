@@ -34,3 +34,15 @@ export async function createUser(payload) {
   });
   return parseResponse(response);
 }
+
+export async function updateUser(id, payload) {
+  const response = await fetch(`${API_BASE}/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  return parseResponse(response);
+}

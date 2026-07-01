@@ -65,7 +65,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
 import { useUsersStore } from '@/stores/users';
-import { userSchema, normalizeErrors } from '@/validation/userValidation';
+import { userCreateSchema, normalizeErrors } from '@/validation/userValidation';
 
 const store = useUsersStore();
 

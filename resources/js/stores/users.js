@@ -67,6 +67,30 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  async function updateUser(id, payload) {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const response = await userService.updateUser(id, payload);
+      
+      if (response.data) {
+        users.value = users.value.map((user) => (user.id === id ? response.data : user));
+
+        if (selectedUser.value?.id === id) {
+          selectedUser.value = response.data;
+        }
+      }
+
+      return response.data;
+    } catch (err) {
+      error.value = err.message || 'Failed to update user.';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     users,
     selectedUser,
@@ -78,5 +102,6 @@ export const useUsersStore = defineStore('users', () => {
     fetchUsers,
     fetchUser,
     createUser,
+    updateUser,
   };
 });

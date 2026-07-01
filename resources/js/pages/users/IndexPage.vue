@@ -11,7 +11,7 @@
     </div>
 
     <div class="grid gap-6 xl:grid-cols-[360px_1fr]">
-      <UserForm />
+      <UserForm mode="create" />
 
       <div class="rounded-3xl bg-white p-6 shadow-sm shadow-slate-200 dark:bg-slate-900 dark:shadow-none">
         <div class="flex items-center justify-between gap-4">
@@ -37,12 +37,21 @@
                   <h3 class="text-base font-semibold text-slate-900 dark:text-white">{{ user.attributes.name }}</h3>
                   <p class="text-sm text-slate-500 dark:text-slate-400">{{ user.attributes.email }}</p>
                 </div>
-                <router-link
-                  :to="{ name: 'UserDetail', params: { id: user.id } }"
-                  class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-                >
-                  View details
-                </router-link>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                    @click="openEdit(user)"
+                  >
+                    Edit
+                  </button>
+                  <router-link
+                    :to="{ name: 'UserDetail', params: { id: user.id } }"
+                    class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                  >
+                    View details
+                  </router-link>
+                </div>
               </div>
               <div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
                 <span>Created at: {{ formatDate(user.attributes.created_at) }}</span>
@@ -63,13 +72,21 @@
         </div>
       </div>
     </div>
+
+    <UserEditModal
+      v-if="editingUser"
+      :user="editingUser"
+      @close="closeEdit"
+      @saved="handleEditSaved"
+    />
   </section>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useUsersStore } from '@/stores/users';
 import UserForm from '@/pages/users/components/UserForm.vue';
+import UserEditModal from '@/pages/users/components/UserEditModal.vue';
 
 const store = useUsersStore();
 
@@ -77,6 +94,7 @@ const users = computed(() => store.users);
 const loading = computed(() => store.loading);
 const userCount = computed(() => store.userCount);
 const hasMore = computed(() => store.hasMore);
+const editingUser = ref(null);
 
 function formatDate(value) {
   return value ? new Date(value).toLocaleString() : '—';
@@ -88,6 +106,18 @@ async function loadUsers() {
 
 async function loadMore() {
   await store.fetchUsers(store.pagination.current_page + 1);
+}
+
+function openEdit(user) {
+  editingUser.value = user;
+}
+
+function closeEdit() {
+  editingUser.value = null;
+}
+
+function handleEditSaved() {
+  closeEdit();
 }
 
 onMounted(() => {
