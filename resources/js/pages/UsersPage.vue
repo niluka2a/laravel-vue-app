@@ -156,13 +156,16 @@ async function loadMore() {
 
 function validateForm() {
   submissionError.value = '';
-  
+
   const result = userSchema.safeParse(form);
   const normalized = normalizeErrors(result);
 
   fieldErrors.name = normalized.name;
   fieldErrors.email = normalized.email;
   fieldErrors.password = normalized.password;
+
+  // Optimised: Instead of replacing the entire object, we update the existing reactive object with new values. This avoids losing reactivity and ensures that Vue can track changes to the individual fields.
+  // Object.assign(fieldErrors, normalized);
 
   return result.success;
 }
