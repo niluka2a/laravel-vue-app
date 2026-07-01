@@ -79,7 +79,7 @@ const error = computed(() => store.error);
 function validateForm() {
   submissionError.value = '';
 
-  const result = userSchema.safeParse(form);
+  const result = userCreateSchema.safeParse(form);
   const normalized = normalizeErrors(result);
 
   fieldErrors.name = normalized.name;
